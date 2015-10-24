@@ -3,7 +3,7 @@
     "capabilities": [
         "configurable"
     ],
-    "companyName": "pebble@iamkelv.in",
+    "companyName": "Kelvin Zhang",
     "longName": "lifx-pebble",
     "projectType": "pebblejs",
     "resources": {
@@ -33,6 +33,10 @@
     },
     "sdkVersion": "3",
     "shortName": "lifx-pebble",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
     "uuid": "0c78ecb7-230a-42ae-adfc-25271ac8ceaf",
     "versionCode": 1,
     "versionLabel": "1.0",

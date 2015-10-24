@@ -17,14 +17,18 @@ Settings.config(
   function(e) {
   },
   function(e) {
-    console.log('closed configurable');
+    console.log('Closed configurable');
   }
 );
 
-// Listen for configuration
+// Listen for configuration start
 Pebble.addEventListener('showConfiguration', function(e) {
-  // Show config page
   Pebble.openURL('https://my-website.com/config-page.html');
+});
+
+// Listen for configuration complete
+Pebble.addEventListener('webviewclosed', function(e) {
+  console.log('Configuration window returned: ' + e.response);
 });
 
 // Check whether the LIFX HTTP API key is set
