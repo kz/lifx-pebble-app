@@ -12,15 +12,6 @@ var scenes = [];
 var lights = [];
 
 /*
- * Initial Loading Screen
- */
-var loadingCard = new UI.Card({
-    title: 'Please Wait',
-    subtitle: 'Loading... (Internet connection required.)'
-});
-loadingCard.show();
-
-/*
  * Configuration
  */
 
@@ -72,15 +63,21 @@ var mainMenu = new UI.Menu({
         },
         {
             title: 'Scenes',
-            items: []
+            items: [
+                { title: 'Loading...' }
+            ]
         },
         {
             title: 'Groups',
-            items: []
+            items: [
+                { title: 'Loading...' }
+            ]
         },
         {
             title: 'Lights',
-            items: []
+            items: [
+                { title: 'Loading...' }
+            ]
         }
     ]
 });
@@ -115,7 +112,6 @@ function handleError(statusCode) {
  * Internet Enabled Functions
  */
 function fetchScenes() {
-    loadingCard.show();
     
     scenes = [];
     
@@ -135,18 +131,14 @@ function fetchScenes() {
                     mainMenu.item(1, scenes.length - 1, {title: scene.name});
                 }
             });
-            
-            loadingCard.hide();
         },
         function(error, status) {
-            loadingCard.hide();
             handleError(status);
         }
     );
 }
 
 function fetchLights() {
-    loadingCard.show();
     
     groups = [];
     lights = [];
@@ -171,11 +163,8 @@ function fetchLights() {
                     mainMenu.item(3, lights.length - 1, {title: light.label});
                 }
             });
-            
-            loadingCard.hide();
         },
         function(error, status) {
-            loadingCard.hide();
             handleError(status);
         }
     );
@@ -228,7 +217,6 @@ function activateScene(uuid) {
  */
 
 mainMenu.show();
-loadingCard.hide();
 
 if (checkConfiguration()) {
     fetchScenes();
@@ -246,11 +234,12 @@ mainMenu.on('select', function(e) {
         toggle('all');
     } else if (e.sectionIndex === 1) {
         // Scenes
-        activateScene(scenes[e.ItemIndex].uuid);
+        activateScene(scenes[e.itemIndex].uuid);
     } else if (e.sectionIndex === 2) {
         // Groups
-        
+        toggle('group_id:' + groups[e.itemIndex].id);
     } else if (e.sectionIndex === 3) {
         // Lights
+        toggle('id:' + lights[e.itemIndex].id);
     }
 });
