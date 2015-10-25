@@ -4,7 +4,7 @@
         "configurable"
     ],
     "companyName": "Kelvin Zhang",
-    "longName": "lifx-pebble",
+    "longName": "Remote for LIFX",
     "projectType": "pebblejs",
     "resources": {
         "media": [
@@ -32,7 +32,7 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "lifx-pebble",
+    "shortName": "LIFX",
     "targetPlatforms": [
         "aplite",
         "basalt"

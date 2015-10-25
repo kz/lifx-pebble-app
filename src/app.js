@@ -1,5 +1,6 @@
 var UI = require('ui');
 var Settings = require('settings');
+var Vibe = require('ui/vibe');
 var ajax = require('ajax');
 
 var CONFIGURATION_URL = "http://kz.github.io/lifx-pebble-config/index.html";
@@ -96,6 +97,7 @@ function checkConfiguration() {
     } else {
         API_KEY = Settings.option('apiKey');
         setupCard.hide();
+        mainMenu.show();
         return true;
     }
 }
@@ -113,6 +115,8 @@ function handleError(statusCode) {
  * Internet Enabled Functions
  */
 function fetchScenes() {
+    loadingCard.show();
+    
     scenes = [];
     
     ajax(
@@ -131,14 +135,19 @@ function fetchScenes() {
                     mainMenu.item(1, scenes.length - 1, {title: scene.name});
                 }
             });
+            
+            loadingCard.hide();
         },
         function(error, status) {
+            loadingCard.hide();
             handleError(status);
         }
     );
 }
 
 function fetchLights() {
+    loadingCard.show();
+    
     groups = [];
     lights = [];
     
@@ -162,24 +171,86 @@ function fetchLights() {
                     mainMenu.item(3, lights.length - 1, {title: light.label});
                 }
             });
+            
+            loadingCard.hide();
         },
         function(error, status) {
+            loadingCard.hide();
             handleError(status);
         }
     );
 }
 
+function toggle(id) {  
+    ajax(
+        {
+            url: API_BASE_URL + '/lights/' + id + '/toggle',
+            type: 'json',
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + API_KEY
+            }
+        },
+        function(data) {
+            Vibe.vibrate('short');
+        },
+        function(error, status) {
+            console.log(JSON.stringify(error));
+            console.log(JSON.stringify(status));
+            handleError(status);
+        }
+    );
+}
+
+function activateScene(uuid) {  
+    ajax(
+        {
+            url: API_BASE_URL + '/scenes/scene_id:' + uuid + '/activate',
+            type: 'json',
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + API_KEY
+            }
+        },
+        function(data) {
+            Vibe.vibrate('short');
+        },
+        function(error, status) {
+            console.log(JSON.stringify(error));
+            console.log(JSON.stringify(status));
+            handleError(status);
+        }
+    );
+}
 
 /*
  * App Ready
  */
 
-Pebble.addEventListener("ready", function () {
-    mainMenu.show();
-    loadingCard.hide();
+mainMenu.show();
+loadingCard.hide();
+
+if (checkConfiguration()) {
+    fetchScenes();
+    fetchLights();
+}
+
+/*
+ * Event Listeners
+ */
+mainMenu.on('select', function(e) {
+    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
+    console.log('The item is titled "' + e.item.title + '"');
     
-    if (checkConfiguration()) {
-        fetchScenes();
-        fetchLights();
+    if (e.item.title === 'Toggle all lights') {
+        toggle('all');
+    } else if (e.sectionIndex === 1) {
+        // Scenes
+        activateScene(scenes[e.ItemIndex].uuid);
+    } else if (e.sectionIndex === 2) {
+        // Groups
+        
+    } else if (e.sectionIndex === 3) {
+        // Lights
     }
 });
