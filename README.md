@@ -5,7 +5,7 @@
 
 Remote for LIFX is a Pebble watchapp which allows users to control their LIFX lights from their watch. Users are able to toggle their lights and activate scenes.
 
-This app works by consuming the LIFX HTTP Remote Control API, authenticating itself using the user's personal access token which they enter into the watchapp's configuration page.
+This watchapp is written in PebbleJS and works by consuming the LIFX HTTP Remote Control API, authenticating itself using the user's personal access token which they enter into the watchapp's configuration page.
 
 ## Installation
 
