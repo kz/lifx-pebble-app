@@ -82,6 +82,17 @@ var mainMenu = new UI.Menu({
     ]
 });
 
+var detailedLightInfoMenu = new UI.Menu({
+    sections: [
+        {
+            title: 'Status',
+            items: [
+                { title: 'Loading...' }
+            ]
+        }
+    ]
+});
+
 /*
  * App Functions
  */
@@ -133,6 +144,8 @@ function fetchScenes() {
             });
         },
         function(error, status) {
+            console.log(JSON.stringify(error));
+            console.log(JSON.stringify(status));
             handleError(status);
         }
     );
@@ -159,7 +172,7 @@ function fetchLights() {
                     mainMenu.item(2, groups.length - 1, {title: light.group.name});
                 }
                 if (!(light.id in lights)) {
-                    lights.push({id: light.id, name: light.label});
+                    lights.push({id: light.id, name: light.label, connected: light.connected, power: light.power });
                     mainMenu.item(3, lights.length - 1, {title: light.label});
                 }
             });
@@ -212,6 +225,10 @@ function activateScene(uuid) {
     );
 }
 
+function showDetailedLightInfo(id) {
+    detailedLightInfoMenu.items(0, [{title: 'Power: ' + light.id}])
+}
+
 /*
  * App Ready
  */
@@ -241,5 +258,14 @@ mainMenu.on('select', function(e) {
     } else if (e.sectionIndex === 3) {
         // Lights
         toggle('id:' + lights[e.itemIndex].id);
+    }
+});
+
+mainMenu.on('longClick', function(e) {
+    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
+    console.log('The item is titled "' + e.item.title + '"');
+    
+    if (e.sectionIndex === 3) {
+        
     }
 });
